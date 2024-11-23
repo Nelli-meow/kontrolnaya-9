@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom';
-import  './TransactionForm.css';
+import './TransactionForm.css';
 import { useState } from 'react';
-import { ITransaction } from '../../types';
+import { ITransaction, ITransactionAPI } from '../../types';
 import * as React from 'react';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { addTransaction } from '../../store/slices/orderSlice.ts';
 import { transactionThunk } from '../../store/thunks/dishesThunk.ts';
 
-
 const initialForm = {
   type: '',
   category: '',
   amount: 1,
-}
+};
+
 
 const TransactionForm = () => {
   const [transaction, setTransaction] = useState<ITransaction>({...initialForm});
@@ -20,10 +20,9 @@ const TransactionForm = () => {
 
   const onChangeField = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const {name, value} = e.target;
-
-    setTransaction(prevState => ({
+    setTransaction((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -39,12 +38,11 @@ const TransactionForm = () => {
       };
 
       dispatch(addTransaction(newTransaction));
-
       await dispatch(transactionThunk(newTransaction));
-
-      setTransaction({ ...initialForm });
+      setTransaction({...initialForm});
     }
-  }
+  };
+
 
   return (
     <div className="modal-overlay">
@@ -59,7 +57,8 @@ const TransactionForm = () => {
               value={transaction.type}
               onChange={onChangeField}
               className="form-select form-select-sm"
-              aria-label="Small select example">
+              aria-label="Small select example"
+            >
               <option value="" disabled>
                 Select type
               </option>
@@ -92,25 +91,25 @@ const TransactionForm = () => {
                 </>
               ) : null}
             </select>
-      </div>
-      <div className="my-3">
-        <label htmlFor="Amount">Amount</label>
-        <div className="d-flex align-items-center">
-          <input
-            value={transaction.amount}
-            onChange={onChangeField}
-            type="number"
-            name="amount"
-            min={1}
-            className="form-control me-2"
-          />
-          <span>KGS</span>
-        </div>
-      </div>
-      <hr/>
-      <div className="my-3 d-flex justify-content-between align-items-center">
-        <Link to="/" type="submit" className="btn btn-outline-info">
-        Cancel
+          </div>
+          <div className="my-3">
+            <label htmlFor="Amount">Amount</label>
+            <div className="d-flex align-items-center">
+              <input
+                value={transaction.amount}
+                onChange={onChangeField}
+                type="number"
+                name="amount"
+                min={1}
+                className="form-control me-2"
+              />
+              <span>KGS</span>
+            </div>
+          </div>
+          <hr/>
+          <div className="my-3 d-flex justify-content-between align-items-center">
+            <Link to="/" type="submit" className="btn btn-outline-info">
+              Cancel
             </Link>
             <button type="submit" className="btn btn-outline-success">
               Save

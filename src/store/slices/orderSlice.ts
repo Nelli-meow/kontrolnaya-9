@@ -1,17 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ITransaction } from '../../types';
-import { fetchAllTransactionThunk, transactionThunk } from '../thunks/dishesThunk.ts';
+import { ITransaction, ITransactionAPI } from '../../types';
+import {
+  fetchAllTransactionThunk,
+  transactionThunk
+} from '../thunks/dishesThunk.ts';
+
 
 
 interface transactionState {
   transactions: ITransaction[];
   isFetching: boolean;
+  oneTransaction: null | ITransactionAPI;
 
+  editLoading: boolean,
 }
 
 const initialState: transactionState = {
   transactions: [],
   isFetching: false,
+  oneTransaction: null,
+  editLoading: false,
 }
 
 
@@ -39,6 +47,7 @@ export const transactionsSlice = createSlice({
         state.isFetching = true;
       })
       .addCase(transactionThunk.fulfilled, (state, action: PayloadAction<ITransaction>) => {
+        state.isFetching = false;
         state.transactions.push(action.payload);
       })
       .addCase(transactionThunk.rejected, (state) => {

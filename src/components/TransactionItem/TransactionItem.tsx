@@ -1,13 +1,30 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { RootState } from '../../app/store.ts';
+import { useCallback } from 'react';
+import { deleteTransactions, fetchAllTransactionThunk } from '../../store/thunks/dishesThunk.ts';
 
 
 const TransactionItem = () => {
   const transactions = useAppSelector((state: RootState) => state.addedTransactions.transactions);
+  const dispatch = useAppDispatch();
+
 
   const newTransactions = [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const fetchDishes = useCallback(() => {
+    dispatch(fetchAllTransactionThunk());
+  }, [dispatch]);
+
+  const deleteOneTransaction = useCallback(
+    async (id: string) => {
+      await dispatch(deleteTransactions(id));
+      fetchDishes();
+    },
+    [dispatch]
+  );
+
 
   return (
     <div className="container align-items-center">
@@ -19,8 +36,8 @@ const TransactionItem = () => {
           </div>
           <div className="d-flex align-items-center justify-content-between gap-4">
             <span>{transaction.type === 'Expense' ? '-' + transaction.amount : '+' + transaction.amount} KGS</span>
-            <Link to="/edit" className="btn btn-outline-warning">Edit</Link>
-            <button className="btn btn-outline-danger">Delete</button>
+            <Link to={`/edit/${transaction.id}/transaction`} className="btn btn-outline-warning">Edit</Link>
+            <button onClick={()  =>  deleteOneTransaction(transaction.id)} className="btn btn-outline-danger">Delete</button>
           </div>
         </div>
       ))}

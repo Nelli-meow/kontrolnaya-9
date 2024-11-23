@@ -14,3 +14,8 @@ export interface ITransactions {
 export interface ITransactionAPI {
   [id: string]: ITransactions;
 }
+
+export interface editTransactionParams {
+  id: string,
+  transaction: ITransactionAPI,
+}

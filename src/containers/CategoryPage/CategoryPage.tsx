@@ -19,11 +19,14 @@ const CategoryPage = () => {
   }, [fetchDishes]);
 
   const deleteOneTransaction = useCallback(
-    async (id: string) => {
-      await dispatch(deleteTransactions(id));
-      fetchDishes();
+    (id: string) => {
+      const answer = window.confirm('Are you sure you want to delete this transaction?');
+      if (answer) {
+        dispatch(deleteTransactions(id));
+        fetchDishes();
+      }
     },
-    [dispatch]
+    [dispatch, fetchDishes()]
   );
 
   return (

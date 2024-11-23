@@ -3,6 +3,9 @@ import  './TransactionForm.css';
 import { useState } from 'react';
 import { ITransaction } from '../../types';
 import * as React from 'react';
+import { useAppDispatch } from '../../app/hooks.ts';
+import { addTransaction } from '../../store/slices/orderSlice.ts';
+import { transactionThunk } from '../../store/thunks/dishesThunk.ts';
 
 
 const initialForm = {
@@ -13,6 +16,7 @@ const initialForm = {
 
 const TransactionForm = () => {
   const [transaction, setTransaction] = useState<ITransaction>({...initialForm});
+  const dispatch = useAppDispatch();
 
   const onChangeField = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -29,8 +33,16 @@ const TransactionForm = () => {
     if (!transaction.type.trim() || !transaction.category.trim() || transaction.amount <= 0) {
       alert('Please fill out all fields correctly');
     } else {
-      setTransaction({...initialForm});
-      console.log(transaction);
+      const newTransaction = {
+        ...transaction,
+        date: new Date().toISOString(),
+      };
+
+      dispatch(addTransaction(newTransaction));
+
+      await dispatch(transactionThunk(newTransaction));
+
+      setTransaction({ ...initialForm });
     }
   }
 

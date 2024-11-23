@@ -11,7 +11,6 @@ interface transactionState {
   transactions: ITransaction[];
   isFetching: boolean;
   oneTransaction: null | ITransactionAPI;
-
   editLoading: boolean,
 }
 

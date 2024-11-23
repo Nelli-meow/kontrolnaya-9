@@ -5,7 +5,6 @@ import { ITransaction } from '../../types';
 import * as React from 'react';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { addTransaction } from '../../store/slices/orderSlice.ts';
-import { transactionThunk } from '../../store/thunks/dishesThunk.ts';
 
 const initialForm = {
   type: '',

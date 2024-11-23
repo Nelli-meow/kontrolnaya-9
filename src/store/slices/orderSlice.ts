@@ -6,7 +6,6 @@ import {
 } from '../thunks/dishesThunk.ts';
 
 
-
 interface transactionState {
   transactions: ITransaction[];
   isFetching: boolean;
@@ -16,7 +15,6 @@ const initialState: transactionState = {
   transactions: [],
   isFetching: false,
 }
-
 
 export const transactionsSlice = createSlice({
   name: 'transactions',

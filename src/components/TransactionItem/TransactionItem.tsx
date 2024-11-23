@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks.ts';
 import { RootState } from '../../app/store.ts';
 
+
 const TransactionItem = () => {
   const transactions = useAppSelector((state: RootState) => state.addedTransactions.transactions);
 
+  const newTransactions = [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   return (
     <div className="container align-items-center">
-      {transactions.map((transaction) => (
+      {newTransactions.map((transaction) => (
         <div key={transaction.id} className="my-5 border border-2 rounded-md shadow-sm p-4 d-flex align-items-center justify-content-sm-between">
           <div className="p-4">
             <span><strong>Date:</strong> {new Date(transaction.date).toString()}</span>
@@ -24,6 +27,7 @@ const TransactionItem = () => {
     </div>
   );
 };
+
 
 
 export default TransactionItem;

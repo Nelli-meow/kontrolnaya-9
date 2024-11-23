@@ -12,10 +12,17 @@ const MainPage = () => {
     dispatch(fetchAllTransactionThunk());
   }, [dispatch]);
 
+  const total = transactions.reduce((acc, transaction) => {
+    const amount = Number(transaction.amount);
+    return transaction.type === 'Expense'
+      ? acc - amount
+      : acc + amount;
+  }, 0);
+
 
   return (
     <div className="container">
-      <h3 className="mt-5">Total: </h3>
+      <h3 className="mt-5">Total: {total}</h3>
       <hr/>
       <div className="d-flex align-items-center gap-4">
         {transactions.length === 0 ? (

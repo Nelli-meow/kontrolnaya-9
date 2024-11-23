@@ -1,16 +1,25 @@
 import TransactionForm from '../../components/TransactionForm/TransactionForm.tsx';
-import { useAppDispatch } from '../../app/hooks.ts';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { ITransaction } from '../../types';
+import axiosAPI from '../../axiosAPI.ts';
 
 const NewTransaction = () => {
-  const dispatch = useAppDispatch();
-  const { id } = useParams() as { id: string };
   const navigate = useNavigate();
 
+  const submitForm = async (transaction: ITransaction) => {
+    try {
+      await axiosAPI.post(`/transactions.json`, {...transaction});
+      navigate('/');
+    } catch (e) {
+      console.error(e);
+    } finally {
+
+    }
+  }
 
   return (
     <>
-      <TransactionForm/>
+      <TransactionForm submitForm={submitForm} />
     </>
   );
 };

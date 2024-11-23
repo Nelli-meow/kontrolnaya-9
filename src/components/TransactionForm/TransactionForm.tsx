@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import './TransactionForm.css';
-import { useState } from 'react';
-import { ITransaction, ITransactionAPI } from '../../types';
+import { useEffect, useState } from 'react';
+import { ITransaction } from '../../types';
 import * as React from 'react';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { addTransaction } from '../../store/slices/orderSlice.ts';
@@ -13,41 +13,56 @@ const initialForm = {
   amount: 1,
 };
 
+interface TransactionFormProps {
+  submitForm: (transaction: ITransaction) => void,
+  transactionToEdit?: ITransaction,
+}
 
-const TransactionForm = () => {
-  const [transaction, setTransaction] = useState<ITransaction>({...initialForm});
+
+const TransactionForm: React.FC<TransactionFormProps> = ({ submitForm, transactionToEdit }) => {
+  const [transaction, setTransaction] = useState<ITransaction>(transactionToEdit || initialForm);
   const dispatch = useAppDispatch();
 
-  const onChangeField = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    const {name, value} = e.target;
+  const onChangeField = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setTransaction((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
+  useEffect(() => {
+    if (transactionToEdit) {
+      setTransaction(transactionToEdit);
+    }
+  }, [transactionToEdit]);
+
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!transaction.type.trim() || !transaction.category.trim() || transaction.amount <= 0) {
       alert('Please fill out all fields correctly');
-    } else {
-      const newTransaction = {
-        ...transaction,
-        date: new Date().toISOString(),
-      };
-
-      dispatch(addTransaction(newTransaction));
-      await dispatch(transactionThunk(newTransaction));
-      setTransaction({...initialForm});
+      return;
     }
-  };
 
+    const newTransaction = {
+      ...transaction,
+      date:  new Date().toISOString(),
+    };
+
+    await submitForm(newTransaction);
+
+    if (!transactionToEdit) {
+      dispatch(addTransaction(newTransaction));
+    }
+
+    setTransaction({ ...initialForm });
+  };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content border border-2 rounded p-4">
-        <h2>Add Expense/Income</h2>
+        <h2>{transactionToEdit ? 'Edit Transaction' : 'Add Expense/Income'}</h2>
         <hr/>
         <form onSubmit={onSubmitForm}>
           <div className="modal-wind">
@@ -108,7 +123,7 @@ const TransactionForm = () => {
           </div>
           <hr/>
           <div className="my-3 d-flex justify-content-between align-items-center">
-            <Link to="/" type="submit" className="btn btn-outline-info">
+            <Link to="/" className="btn btn-outline-info">
               Cancel
             </Link>
             <button type="submit" className="btn btn-outline-success">

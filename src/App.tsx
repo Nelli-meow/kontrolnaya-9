@@ -13,11 +13,11 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainPage/>}/>
         <Route path="/add" element={<NewTransaction/>}/>
-        <Route path="/edit/:id/transaction" element={<EditForm/>}/>
+        <Route path="/edit/:idTransactions/transaction" element={<EditForm/>}/>
         <Route path="*" element={<p className="text-center m-5">Page is not found :(</p>} />
       </Routes>
     </>
   )
 };
 
-export default App
+export default App;

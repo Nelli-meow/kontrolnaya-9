@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ITransaction, ITransactionAPI } from '../../types';
+import { ITransaction } from '../../types';
 import {
   fetchAllTransactionThunk,
   transactionThunk
@@ -10,15 +10,11 @@ import {
 interface transactionState {
   transactions: ITransaction[];
   isFetching: boolean;
-  oneTransaction: null | ITransactionAPI;
-  editLoading: boolean,
 }
 
 const initialState: transactionState = {
   transactions: [],
   isFetching: false,
-  oneTransaction: null,
-  editLoading: false,
 }
 
 

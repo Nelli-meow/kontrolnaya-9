@@ -39,25 +39,3 @@ export const deleteTransactions = createAsyncThunk<void, string>(
     await axiosAPI.delete(`transactions/${id}.json`);
   }
 );
-
-export const getOneTransactionById = createAsyncThunk<ITransactionAPI, string>(
-  'transactions/getOneTransactionById',
-  async (id) => {
-
-    const response = await axiosAPI.get<ITransactionAPI | null>('/transactions/' + id + '.json');
-    const transaction = response.data;
-
-    if (transaction === null) {
-      throw new Error('Not found');
-    }
-    return transaction;
-  }
-
-);
-
-export const editTransaction = createAsyncThunk<void, {transactionId: string, transaction: ITransactionAPI}>(
-  'transactions/editTransaction',
-  async ({id, transaction}) => {
-    await axiosAPI.put('/dishes/' + id + '.json', {...transaction});
-  }
-);
